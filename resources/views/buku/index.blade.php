@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <a href="{{ route('buku.create')}}" class="btn btn-primary float-end">Tambah Buku</a>
     <table class="table table-stripped table-bordered">
         <thead class="table-dark">
             <tr>
@@ -20,14 +21,29 @@
             </tr>
         </thead>
         <tbody>
+            <?php $i = 1; ?>
             @foreach ($data_buku as $buku)
                 <tr>
-                    <td>{{ $buku->id }}</td>
+                    <td>{{$i}}</td>
                     <td>{{ $buku->judul }}</td>
                     <td>{{ $buku->penulis }}</td>
                     <td>{{ "Rp. ".number_format($buku->harga), 2, ',', '.' }}</td>
                     <td>{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}</td>
+                    <td>
+                        <form action="{{route('buku.destroy', $buku->id)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button onclick="return confirm('Yakin mau di hapus?')" type="submit"
+                            class="btn btn-danger">Hapus</button>
+                        </form>
+                        <form action="{{route('buku.edit', $buku->id)}}" method="GET">
+                            @csrf
+                            <button type="submit"
+                            class="btn btn-primary">Update</button>
+                        </form>
+                    </td>
                 </tr>
+                <?php $i++; ?>
             @endforeach
         </tbody>
     </table>
